@@ -39,7 +39,10 @@ import           Data.Char     (isDigit, digitToInt)
 
 -- [1,2,3,4] -> [(1,2),(2,3),(3,4),(4,1)]
 conseqs :: [a] -> [(a, a)]
-conseqs = undefined
+conseqs xs = zip xs ys
+    where
+      ys = drop 1 $ cycle xs
+--      ys = tail xs ++ head xs
 
 -- [1,2,3,4] -> [[1,2],[3,4]]
 -- hint: try to hoogle function: Int -> [a] -> ([a],[a])
@@ -53,15 +56,15 @@ pairs = undefined
 
 -- [(1,1),(1,2),(3,3)] -> [1,3]
 matchings :: Eq a => [(a, a)] -> [a]
-matchings = undefined
+matchings = fmap fst . filter (uncurry (==))
 
--- "1234" -> [1,2,3,4]
+-- "1234" -> [1,2,3,4] String -> [Char]
 parse :: String -> [Int]
-parse = undefined
+parse = fmap digitToInt. filter isDigit
 
 -- hint chain and show everything above
 day1a :: String -> String
-day1a = undefined
+day1a = show.sum.matchings.conseqs.parse
 
 day1b :: String -> String
 day1b = undefined

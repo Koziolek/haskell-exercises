@@ -8,33 +8,48 @@ main = do
   putStrLn "bye"
 
 max' :: Ord a => a -> a -> a
-max' a b = undefined
+max' a b = if a > b
+            then a
+            else b
 
 maximum' :: Ord a => [a] -> a
 maximum' []     = error "why?"
-maximum' [x]    = undefined
-maximum' (x:xs) = undefined
+maximum' [x]    = x
+maximum' (x:xs) = do
+                  let mxs = maximum' xs
+                  max' x mxs
 
 maximumTotal :: Ord a => [a] -> Maybe a
-maximumTotal []     = undefined
-maximumTotal [x]    = undefined
-maximumTotal (x:xs) = undefined
+maximumTotal []     = Nothing
+maximumTotal [x]    = Just x
+maximumTotal (x:xs)
+  | Just x > tailMax = Just x
+  | otherwise = tailMax
+  where tailMax = maximumTotal xs
 
 data Tree = Leaf
     | Node Tree Tree
     deriving (Show, Eq)
 
 longestBranch :: Tree -> Int
-longestBranch Leaf         = undefined
-longestBranch (Node b1 b2) = undefined
+longestBranch Leaf         = 0
+longestBranch (Node b1 b2) = 1 + max (longestBranch b1) (longestBranch b2)
 
 shortestBranch :: Tree -> Int
-shortestBranch Leaf         = undefined
-shortestBranch (Node b1 b2) = undefined
+shortestBranch Leaf         = 0
+shortestBranch (Node b1 b2) = 1 + min (longestBranch b1) (longestBranch b2)
+
+lsBranch :: (Int -> Int -> Int) -> Tree -> Int
+lsBranch _ Leaf         = 0
+lsBranch f (Node b1 b2) = 1 + f (lsBranch f b1) (lsBranch f b2)
 
 -- how many pattern matches to use?
 isSubtree :: Tree -> Tree -> Bool
-isSubtree = undefined
+isSubtree Leaf Leaf = True
+isSubtree (Node _ _) Leaf = False
+-- @ alias lokalny
+isSubtree t1 t2@(Node b1 b2) = t1 == t2 || isSubtree t1 b1 || isSubtree t1 b2
+
 
 factorial :: Integer -> Integer
 factorial n = undefined
